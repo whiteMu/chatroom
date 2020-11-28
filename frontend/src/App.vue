@@ -26,28 +26,43 @@ export default {
   name: "App",
   data() {
     return {
-      statusTips: '聊天室正在连接...',
+      statusTips: '聊天室正在连接221....',
       inputText: '',
       messageList: []
     }
   },
   created() {
     const _this = this
+    _this.userInfo = window.localStorage.getItem("userInfo") || null
     _this.createWS()
   },
   beforeDestroy() {
     const _this = this
-    console.log("触发了")
     _this.ws.close()
   },
   methods: {
     createWS() {
       const _this = this
       if (window.WebSocket) {
-        _this.ws = new WebSocket("ws://192.168.0.101:8001")
+        _this.ws = new WebSocket(`ws://${window.location.hostname}:8001`)
         _this.ws.onopen = function () {
           console.log('连接服务器成功');
           _this.statusTips = '连接成功';
+          //登入消息
+          let param
+          try {
+            param = {
+              type: 'self',
+              userid: _this.userInfo.userid,
+              photo: _this.userInfo.photo,
+              username: _this.userInfo.username
+            }
+          } catch {
+            param = {
+              type: 'self'
+            }
+          }
+          _this.ws.send(JSON.stringify(param))
         }
         _this.ws.onclose = function () {
           console.log('服务器关闭');
@@ -57,7 +72,18 @@ export default {
         }
         _this.ws.onmessage = function (e) {
           // 接收信息
-          _this.messageList.push(e.data)
+          let resData = e.data
+          console.log("接受数据e", resData)
+          //分配的个人信息写入本地
+          if(resData.type === 'self') {
+            _this.userInfo = resData
+            window.localStorage.setItem('userInfo', _this.userInfo)
+          } else if(resData.type === 'user') {//别人登入消息
+            
+          } else {//消息
+            _this.messageList.push(resData)
+          }
+          
           
         }
       }
@@ -65,7 +91,13 @@ export default {
     sendMsg() {
       const _this = this;
       let msg = _this.inputText
-      _this.ws && _this.ws.send(msg)
+      let param = {
+        type: 'message',
+        msg,
+        userid: _this.userInfo.userid,
+        username: _this.userInfo.username
+      }
+      _this.ws && _this.ws.send(param)
     }
   }
 }
