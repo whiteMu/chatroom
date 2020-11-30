@@ -1,38 +1,39 @@
 const ws = require("nodejs-websocket");
 const fs = require("fs")
+const baseUrl = ''
 var allUser = [{
-    userName: '周瑜',
+    userName: '哆啦A梦',
     userIcon: './assets/0.jpg'
 },{
-    userName: '小乔',
+    userName: '樱桃小丸子',
     userIcon: './assets/1.jpg'
 },{
-    userName: '大乔',
-    userIcon: ''
+    userName: '蜡笔小新',
+    userIcon: './assets/2.jpg'
 },{
-    userName: '武大郎',
-    userIcon: ''
+    userName: '路飞',
+    userIcon: './assets/3.jpg'
 },{
-    userName: '西门庆',
-    userIcon: ''
+    userName: '夏目贵志',
+    userIcon: './assets/4.jpg'
 },{
-    userName: '武松',
-    userIcon: ''
+    userName: '柯南',
+    userIcon: './assets/5.jpg'
 },{
-    userName: '嫦娥',
-    userIcon: ''
+    userName: '樱田妮妮',
+    userIcon: './assets/6.jpg'
 },{
-    userName: '猪八戒',
-    userIcon: ''
+    userName: '风间彻',
+    userIcon: './assets/7.jpg'
 },{
     userName: '扫地僧',
-    userIcon: ''
+    userIcon: './assets/1.jpg'
 },{
     userName: '唐僧',
-    userIcon: ''
+    userIcon: './assets/1.jpg'
 },{
     userName: '孙悟空',
-    userIcon: ''
+    userIcon: './assets/1.jpg'
 }]
 
 var nearMsgList = []
@@ -82,7 +83,7 @@ class ConnHandler {
         let param = {
             type: 'notify',
             data: {
-                content: this.userName + '加入了群聊'
+                content: '"' + this.userName + '"' + '加入了群聊'
             }
         }
         this.sendGroupMessage(param)
@@ -93,7 +94,7 @@ class ConnHandler {
         let param = {
             type: 'notify',
             data: {
-                content: this.userName + '离开了群聊'
+                content: '"' + this.userName + '"' + '离开了群聊'
             }
         }
         this.sendGroupMessage(param)

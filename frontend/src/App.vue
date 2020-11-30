@@ -1,33 +1,42 @@
 <template>
   <div id="app">
-    <div id="mess">{{ statusTips }}</div>
+    <!-- <header>聊天室({{statusTips}})</header> -->
     <div class="chat-wrapper">
       <!-- message list -->
       <div class="list-wrap">
         <div class="list" v-for="(item, index) in messageList" :key="index">
-          <div class="list-content" v-if="item.senderId != userId">
-            <img class="icon" :src="item.senderIcon" />
-            <div class="send left">
-              {{ item.content }}
-              <div class="arrow"></div>
+          <div class="notify" v-if="item.type=='notify'">{{item.data.content}}</div>
+          <template v-else>
+            <div class="list-content" v-if="item.data.senderId != userId">
+              <img class="icon" :src="item.data.senderIcon" />
+              <div class="list-content-msg">
+                <div class="sender-name">{{item.data.senderName}}</div>
+                <div class="send left">
+                  {{ item.data.content }}
+                  <div class="arrow"></div>
+                </div>
+              </div>
             </div>
-          </div>
-          <div class="list-content" v-else>
-            <div class="send right">
-              {{ item.content }}
-              <div class="arrow"></div>
+            <div class="list-content right" v-else>
+              <div class="list-content-msg">
+                <div class="sender-name" style="text-align:right;">{{item.data.senderName}}</div>
+                <div class="send right">
+                  {{ item.data.content }}
+                  <div class="arrow"></div>
+                </div>
+              </div>
+              <img class="icon" :src="item.data.senderIcon" />
             </div>
-            <img class="icon" :src="item.senderIcon" />
-          </div>
+          </template>
         </div>
       </div>
-      <!-- messge input -->
+    </div>
+    <!-- messge input -->
       <div class="footer">
         <input id="mes-input" v-model="inputText" />
-        <button @click="sendMsg">发送</button>
-        <button @click="clear">换名称</button>
+        <button class="send-btn" @click="sendMsg">发送</button>
+        <!-- <button @click="clear">换名称</button> -->
       </div>
-    </div>
   </div>
 </template>
 
@@ -36,7 +45,7 @@ export default {
   name: "App",
   data() {
     return {
-      statusTips: "聊天室正在连接221....",
+      statusTips: "正在连接...",
       userId: "",
       inputText: "",
       messageList: [],
@@ -45,7 +54,6 @@ export default {
   created() {
     const _this = this;
     _this.userId = window.localStorage.getItem("userId") || null;
-    console.log(_this.userId, "userid");
     _this.createWS();
   },
   beforeDestroy() {
@@ -87,7 +95,7 @@ export default {
             _this.messageList = resData.data;
           } else {
             //消息 or 通知
-            _this.messageList.push(resData.data);
+            _this.messageList.push(resData);
           }
         };
       }
@@ -125,6 +133,7 @@ body {
   width: 100%;
   height: 100%;
   overflow-x: hidden;
+  background: #4d4948;
 }
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
@@ -143,18 +152,32 @@ body {
   margin: 0;
 }
 .chat-wrapper {
-  flex: 1;
-  border: 1px solid slategrey;
+  height: calc(100% - 45px);
   display: flex;
   flex-direction: column;
   overflow-y: auto;
 }
 .list-wrap {
   flex: 1;
+  padding-top: 20px;
   .list {
-    margin-top: 20px;
+    margin-bottom: 20px;
+    .notify{
+      color: #5e9fbb;
+      font-size: 14px;
+      text-align: center;
+    }
     .list-content {
       display: flex;
+      .list-content-msg{
+        .sender-name{
+          color: #ccc;
+          font-size: 12px;
+        }
+      }
+      &.right{
+        justify-content: flex-end;
+      }
       .send {
         position: relative;
         min-width: 10px;
@@ -163,10 +186,11 @@ body {
         padding: 6px;
         background: #f8c301;
         border-radius: 5px;
+        margin-right: 10px;
         //margin:20px auto 0;
         .arrow {
           position: absolute;
-          top: 5px;
+          top: 8px;
           right: -16px; /* 圆角的位置需要细心调试哦 */
           width: 0;
           height: 0;
@@ -177,10 +201,10 @@ body {
       }
       .send.left {
         background: #ffffff;
-        margin-left: 20px;
+        margin-left: 10px;
         .arrow {
           position: absolute;
-          top: 5px;
+          top: 8px;
           left: -16px; /* 圆角的位置需要细心调试哦 */
           width: 0;
           height: 0;
@@ -190,8 +214,10 @@ body {
         }
       }
       .icon {
-        width: 30px;
-        height: 30px;
+        width: 40px;
+        height: 40px;
+        margin: 10px;
+        border-radius: 4px;
       }
     }
   }
@@ -199,10 +225,22 @@ body {
 .footer {
   width: 100vw;
   display: flex;
+  padding: 0 10px;
   input {
     width: 100%;
-    height: 40px;
+    height: 45px;
     border: 1px solid slategrey;
+    padding-left: 10px;
+    font-size: 16px;
+  }
+  .send-btn{
+    width: 80px;
+    height: 43px;
+    border: 0;
+    font-size: 18px;
+    border-radius: 4px;
+    color: #fff;
+    background: #f8c301;
   }
 }
 </style>
