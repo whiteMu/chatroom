@@ -2,6 +2,9 @@ const ws = require("nodejs-websocket");
 const fs = require("fs")
 const baseUrl = ''
 var allUser = [{
+    userName: '可达鸭',
+    userIcon: './assets/14.jpg'
+},{
     userName: '哆啦A梦',
     userIcon: './assets/0.jpg'
 },{
@@ -11,7 +14,7 @@ var allUser = [{
     userName: '蜡笔小新',
     userIcon: './assets/2.jpg'
 },{
-    userName: '路飞',
+    userName: '蒙奇·D·路飞',
     userIcon: './assets/3.jpg'
 },{
     userName: '夏目贵志',
@@ -24,16 +27,34 @@ var allUser = [{
     userIcon: './assets/6.jpg'
 },{
     userName: '风间彻',
-    userIcon: './assets/7.jpg'
+    userIcon: './assets/7.jpeg'
 },{
-    userName: '扫地僧',
-    userIcon: './assets/1.jpg'
+    userName: '猫咪老师',
+    userIcon: './assets/8.jpeg'
 },{
-    userName: '唐僧',
-    userIcon: './assets/1.jpg'
+    userName: '小起',
+    userIcon: './assets/9.jpg'
 },{
-    userName: '孙悟空',
-    userIcon: './assets/1.jpg'
+    userName: '犬夜叉',
+    userIcon: './assets/10.jpg'
+},{
+    userName: '阿呆',
+    userIcon: './assets/11.jpg'
+},{
+    userName: '大雄',
+    userIcon: './assets/12.jpg'
+},{
+    userName: '小刘鸭',
+    userIcon: './assets/13.jpg'
+},{
+    userName: '托尼托尼·乔巴',
+    userIcon: './assets/15.jpg'
+},{
+    userName: '罗罗诺亚·索隆',
+    userIcon: './assets/16.jpg'
+},{
+    userName: '杀生丸',
+    userIcon: './assets/17.jpg'
 }]
 
 var nearMsgList = []

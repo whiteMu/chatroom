@@ -64,7 +64,7 @@ export default {
     createWS() {
       const _this = this;
       if (window.WebSocket) {
-        _this.ws = new WebSocket(`ws://${window.location.hostname}:8001`);
+        _this.ws = new WebSocket(`wss://${window.location.host}/ws`);
 
         _this.ws.onopen = function () {
           _this.statusTips = "连接成功";
